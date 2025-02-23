@@ -5,6 +5,9 @@ name = "pypi"
 
 [packages]
 numpy = "*"
+ipykernel = "*"
+seaborn = "*"
+tqdm = "*"
 
 [dev-packages]
 
