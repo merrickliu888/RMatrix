@@ -3,10 +3,6 @@ name = "rmatrix"
 version = "0.1.0"
 edition = "2021"
 
-[[bin]]
-name = "experiments"
-path = "experiments/main.rs"
-
 [dependencies]
 
 [dev-dependencies]
