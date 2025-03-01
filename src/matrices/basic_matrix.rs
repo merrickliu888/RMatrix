@@ -44,7 +44,7 @@ impl Matrix for BasicMatrix {
     fn matrix_addition(&self, other: &Self) -> Self {
         if self.rows != other.rows || self.cols != other.cols {
             panic!(
-                "Dimension mismatch - LHS ({}x{}), RHS ({}x{})",
+                "Add: Dimension mismatch - LHS ({}x{}), RHS ({}x{})",
                 self.rows, self.cols, other.rows, other.cols
             );
         }
@@ -63,7 +63,7 @@ impl Matrix for BasicMatrix {
     fn matrix_subtraction(&self, other: &Self) -> Self {
         if self.rows != other.rows || self.cols != other.cols {
             panic!(
-                "Dimension mismatch - LHS ({}x{}), RHS ({}x{})",
+                "Sub: Dimension mismatch - LHS ({}x{}), RHS ({}x{})",
                 self.rows, self.cols, other.rows, other.cols
             );
         }
@@ -80,9 +80,22 @@ impl Matrix for BasicMatrix {
     }
 
     fn matrix_multiplication(&self, other: &Self) -> Self {
-        let mut res = Self::zeroes(self.rows, self.cols);
+        if self.cols != other.rows {
+            panic!(
+                "Mult: Dimension mismatch - LHS ({}x{}), RHS ({}x{})",
+                self.rows, self.cols, other.rows, other.cols
+            )
+        }
 
-        // TODO
+        let mut res = Self::zeroes(self.rows, other.cols);
+
+        for i in 0..self.rows {
+            for j in 0..other.cols {
+                for k in 0..self.cols {
+                    res.data[i][j] += self.data[i][k] * other.data[k][j]
+                }
+            }
+        }
 
         res
     }
@@ -100,6 +113,14 @@ impl Matrix for BasicMatrix {
     }
 
     fn transpose(&mut self) -> () {
-        self.transposed = !self.transposed;
+        let mut res = Self::zeroes(self.cols, self.rows);
+
+        for i in 0..self.rows {
+            for j in 0..self.cols {
+                res.data[j][i] = self.data[i][j];
+            }
+        }
+
+        self.data = res;
     }
 }
