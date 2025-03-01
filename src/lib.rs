@@ -1,21 +1,3 @@
-trait Matrix {
-    // constructor
+pub trait Matrix {}
 
-    // addition
-
-    // subtraction (which is just addition of the negative)
-
-    // matrix multiplication
-
-    // scalar multiplication
-
-    // transpose
-}
-
-struct NaiveMatrix {
-    // Naive matrix implementation
-}
-
-struct OptimizedMatrix {
-    // Optimized matrix implementation
-}
+pub mod matrices;

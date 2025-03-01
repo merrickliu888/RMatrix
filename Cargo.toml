@@ -8,3 +8,6 @@ name = "experiments"
 path = "experiments/main.rs"
 
 [dependencies]
+
+[dev-dependencies]
+ndarray = "0.16.1"
