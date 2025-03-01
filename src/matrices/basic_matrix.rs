@@ -4,17 +4,23 @@ pub struct BasicMatrix {
     rows: usize,
     cols: usize,
     data: Vec<Vec<f64>>,
-    transposed: bool,
 }
 
 impl BasicMatrix {
     pub fn new(rows: usize, cols: usize, data: Vec<Vec<f64>>) -> Self {
-        Self {
-            rows,
-            cols,
-            data,
-            transposed: false,
-        }
+        Self { rows, cols, data }
+    }
+
+    pub fn get_rows(&self) -> usize {
+        self.rows
+    }
+
+    pub fn get_cols(&self) -> usize {
+        self.cols
+    }
+
+    pub fn get_data(&self) -> &Vec<Vec<f64>> {
+        &self.data
     }
 }
 
@@ -24,7 +30,6 @@ impl Matrix for BasicMatrix {
             rows,
             cols,
             data: vec![vec![0.0; cols]; rows],
-            transposed: false,
         }
     }
 
@@ -37,7 +42,6 @@ impl Matrix for BasicMatrix {
             rows: size,
             cols: size,
             data,
-            transposed: false,
         }
     }
 
@@ -121,6 +125,9 @@ impl Matrix for BasicMatrix {
             }
         }
 
-        self.data = res;
+        self.data = res.data;
+        let temp = self.rows;
+        self.rows = self.cols;
+        self.cols = temp;
     }
 }
