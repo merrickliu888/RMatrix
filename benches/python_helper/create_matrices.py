@@ -15,12 +15,18 @@ def save_matrices(matrices: list[np.ndarray], filename: str):
     Save a list of matrices to a json file
     """
     serialized_matrices = [matrix.tolist() for matrix in matrices]
-    with open(f"./benches/{filename}", 'w') as f:  
+    with open(filename, 'w') as f:  
         json.dump(serialized_matrices, f)
 
-if __name__ == "__main__":
-    matrices1 = generate_matrix_set(10, 1000, 10)
-    save_matrices(matrices1, "matrices1.json")
+def generate_and_save_matrices(n_start: int, n_end: int, step_size: int = 1, filename: str = "matrices.json"):
+    """
+    Generate and save a set of random matrices of size n x n where n_start <= n <= n_end
+    """
+    matrices = generate_matrix_set(n_start, n_end, step_size)
+    save_matrices(matrices, filename)
 
-    matrices2 = generate_matrix_set(10, 1000, 10)
-    save_matrices(matrices2, "matrices2.json")
+if __name__ == "__main__":
+    print("Generating and saving matrices...")
+    generate_and_save_matrices(10, 1000, 10, "./benches/matrices1.json")
+    generate_and_save_matrices(10, 1000, 10, "./benches/matrices2.json")
+    print("Matrices created and saved.")
