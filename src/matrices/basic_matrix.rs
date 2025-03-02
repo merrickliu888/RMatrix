@@ -1,5 +1,4 @@
 use crate::Matrix;
-
 // This is a naive implementation of a matrix with no optimizations.
 #[derive(Debug)]
 pub struct BasicMatrix {
