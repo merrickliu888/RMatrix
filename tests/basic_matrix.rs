@@ -5,7 +5,7 @@ use std::panic::{catch_unwind, AssertUnwindSafe};
 #[test]
 fn test_new() {
     let data = vec![vec![1.0, 2.0], vec![3.0, 4.0]];
-    let matrix = BasicMatrix::new(2, 2, data.clone());
+    let matrix = BasicMatrix::new(data.clone());
 
     // We need to implement getters to properly test this
     // For now, we'll test indirectly through other methods
@@ -55,7 +55,7 @@ fn test_identity() {
 #[test]
 fn test_matrix_multiplication_identity() {
     let data = vec![vec![1.0, 2.0, 3.0], vec![4.0, 5.0, 6.0]];
-    let matrix = BasicMatrix::new(2, 3, data.clone());
+    let matrix = BasicMatrix::new(data.clone());
     let identity = BasicMatrix::identity(3); // Identity matrix for multiplication
 
     let result = matrix.matrix_multiplication(&identity);
@@ -66,8 +66,8 @@ fn test_matrix_multiplication_identity() {
 
 #[test]
 fn test_matrix_addition() {
-    let matrix1 = BasicMatrix::new(2, 2, vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
-    let matrix2 = BasicMatrix::new(2, 2, vec![vec![5.0, 6.0], vec![7.0, 8.0]]);
+    let matrix1 = BasicMatrix::new(vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
+    let matrix2 = BasicMatrix::new(vec![vec![5.0, 6.0], vec![7.0, 8.0]]);
 
     let result = matrix1.matrix_addition(&matrix2);
 
@@ -77,8 +77,8 @@ fn test_matrix_addition() {
 
 #[test]
 fn test_matrix_addition_dimension_mismatch() {
-    let matrix1 = BasicMatrix::new(2, 2, vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
-    let matrix2 = BasicMatrix::new(2, 3, vec![vec![5.0, 6.0, 7.0], vec![8.0, 9.0, 10.0]]);
+    let matrix1 = BasicMatrix::new(vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
+    let matrix2 = BasicMatrix::new(vec![vec![5.0, 6.0, 7.0], vec![8.0, 9.0, 10.0]]);
 
     // Should panic with dimension mismatch
     let result = catch_unwind(AssertUnwindSafe(|| matrix1.matrix_addition(&matrix2)));
@@ -88,8 +88,8 @@ fn test_matrix_addition_dimension_mismatch() {
 
 #[test]
 fn test_matrix_subtraction() {
-    let matrix1 = BasicMatrix::new(2, 2, vec![vec![5.0, 6.0], vec![7.0, 8.0]]);
-    let matrix2 = BasicMatrix::new(2, 2, vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
+    let matrix1 = BasicMatrix::new(vec![vec![5.0, 6.0], vec![7.0, 8.0]]);
+    let matrix2 = BasicMatrix::new(vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
 
     let result = matrix1.matrix_subtraction(&matrix2);
 
@@ -99,8 +99,8 @@ fn test_matrix_subtraction() {
 
 #[test]
 fn test_matrix_subtraction_dimension_mismatch() {
-    let matrix1 = BasicMatrix::new(2, 2, vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
-    let matrix2 = BasicMatrix::new(2, 3, vec![vec![5.0, 6.0, 7.0], vec![8.0, 9.0, 10.0]]);
+    let matrix1 = BasicMatrix::new(vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
+    let matrix2 = BasicMatrix::new(vec![vec![5.0, 6.0, 7.0], vec![8.0, 9.0, 10.0]]);
 
     // Should panic with dimension mismatch
     let result = catch_unwind(AssertUnwindSafe(|| matrix1.matrix_subtraction(&matrix2)));
@@ -110,12 +110,8 @@ fn test_matrix_subtraction_dimension_mismatch() {
 
 #[test]
 fn test_matrix_multiplication() {
-    let matrix1 = BasicMatrix::new(2, 3, vec![vec![1.0, 2.0, 3.0], vec![4.0, 5.0, 6.0]]);
-    let matrix2 = BasicMatrix::new(
-        3,
-        2,
-        vec![vec![7.0, 8.0], vec![9.0, 10.0], vec![11.0, 12.0]],
-    );
+    let matrix1 = BasicMatrix::new(vec![vec![1.0, 2.0, 3.0], vec![4.0, 5.0, 6.0]]);
+    let matrix2 = BasicMatrix::new(vec![vec![7.0, 8.0], vec![9.0, 10.0], vec![11.0, 12.0]]);
 
     let result = matrix1.matrix_multiplication(&matrix2);
 
@@ -132,8 +128,8 @@ fn test_matrix_multiplication() {
 
 #[test]
 fn test_matrix_multiplication_dimension_mismatch() {
-    let matrix1 = BasicMatrix::new(2, 2, vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
-    let matrix2 = BasicMatrix::new(3, 2, vec![vec![5.0, 6.0], vec![7.0, 8.0], vec![9.0, 10.0]]);
+    let matrix1 = BasicMatrix::new(vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
+    let matrix2 = BasicMatrix::new(vec![vec![5.0, 6.0], vec![7.0, 8.0], vec![9.0, 10.0]]);
 
     // Should panic with dimension mismatch
     let result = catch_unwind(AssertUnwindSafe(|| matrix1.matrix_multiplication(&matrix2)));
@@ -143,7 +139,7 @@ fn test_matrix_multiplication_dimension_mismatch() {
 
 #[test]
 fn test_scalar_multiplication() {
-    let matrix = BasicMatrix::new(2, 2, vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
+    let matrix = BasicMatrix::new(vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
     let scalar = 2.0;
 
     let result = matrix.scalar_multiplication(&scalar);
@@ -154,7 +150,7 @@ fn test_scalar_multiplication() {
 
 #[test]
 fn test_transpose() {
-    let mut matrix = BasicMatrix::new(2, 3, vec![vec![1.0, 2.0, 3.0], vec![4.0, 5.0, 6.0]]);
+    let mut matrix = BasicMatrix::new(vec![vec![1.0, 2.0, 3.0], vec![4.0, 5.0, 6.0]]);
 
     matrix.transpose();
 

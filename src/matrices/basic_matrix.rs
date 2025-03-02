@@ -1,22 +1,21 @@
 use crate::Matrix;
 
+// This is a naive implementation of a matrix with no optimizations.
 pub struct BasicMatrix {
-    rows: usize,
-    cols: usize,
     data: Vec<Vec<f64>>,
 }
 
 impl BasicMatrix {
-    pub fn new(rows: usize, cols: usize, data: Vec<Vec<f64>>) -> Self {
-        Self { rows, cols, data }
+    pub fn new(data: Vec<Vec<f64>>) -> Self {
+        Self { data }
     }
 
     pub fn get_rows(&self) -> usize {
-        self.rows
+        self.data.len()
     }
 
     pub fn get_cols(&self) -> usize {
-        self.cols
+        self.data[0].len()
     }
 
     pub fn get_data(&self) -> &Vec<Vec<f64>> {
@@ -27,8 +26,6 @@ impl BasicMatrix {
 impl Matrix for BasicMatrix {
     fn zeroes(rows: usize, cols: usize) -> Self {
         Self {
-            rows,
-            cols,
             data: vec![vec![0.0; cols]; rows],
         }
     }
@@ -38,25 +35,26 @@ impl Matrix for BasicMatrix {
         for i in 0..size {
             data[i][i] = 1.0;
         }
-        Self {
-            rows: size,
-            cols: size,
-            data,
-        }
+        Self { data }
     }
 
     fn matrix_addition(&self, other: &Self) -> Self {
-        if self.rows != other.rows || self.cols != other.cols {
+        let self_rows = self.get_rows();
+        let self_cols = self.get_cols();
+        let other_rows = other.get_rows();
+        let other_cols = other.get_cols();
+
+        if self_rows != other_rows || self_cols != other_cols {
             panic!(
                 "Add: Dimension mismatch - LHS ({}x{}), RHS ({}x{})",
-                self.rows, self.cols, other.rows, other.cols
+                self_rows, self_cols, other_rows, other_cols
             );
         }
 
-        let mut res = Self::zeroes(self.rows, self.cols);
+        let mut res = Self::zeroes(self_rows, self_cols);
 
-        for i in 0..self.rows {
-            for j in 0..self.cols {
+        for i in 0..self_rows {
+            for j in 0..self_cols {
                 res.data[i][j] = self.data[i][j] + other.data[i][j]
             }
         }
@@ -65,17 +63,22 @@ impl Matrix for BasicMatrix {
     }
 
     fn matrix_subtraction(&self, other: &Self) -> Self {
-        if self.rows != other.rows || self.cols != other.cols {
+        let self_rows = self.get_rows();
+        let self_cols = self.get_cols();
+        let other_rows = other.get_rows();
+        let other_cols = other.get_cols();
+
+        if self_rows != other_rows || self_cols != other_cols {
             panic!(
                 "Sub: Dimension mismatch - LHS ({}x{}), RHS ({}x{})",
-                self.rows, self.cols, other.rows, other.cols
+                self_rows, self_cols, other_rows, other_cols
             );
         }
 
-        let mut res = Self::zeroes(self.rows, self.cols);
+        let mut res = Self::zeroes(self_rows, self_cols);
 
-        for i in 0..self.rows {
-            for j in 0..self.cols {
+        for i in 0..self_rows {
+            for j in 0..self_cols {
                 res.data[i][j] = self.data[i][j] - other.data[i][j]
             }
         }
@@ -84,18 +87,23 @@ impl Matrix for BasicMatrix {
     }
 
     fn matrix_multiplication(&self, other: &Self) -> Self {
-        if self.cols != other.rows {
+        let self_rows = self.get_rows();
+        let self_cols = self.get_cols();
+        let other_rows = other.get_rows();
+        let other_cols = other.get_cols();
+
+        if self_cols != other_rows {
             panic!(
                 "Mult: Dimension mismatch - LHS ({}x{}), RHS ({}x{})",
-                self.rows, self.cols, other.rows, other.cols
+                self_rows, self_cols, other_rows, other_cols
             )
         }
 
-        let mut res = Self::zeroes(self.rows, other.cols);
+        let mut res = Self::zeroes(self_rows, other_cols);
 
-        for i in 0..self.rows {
-            for j in 0..other.cols {
-                for k in 0..self.cols {
+        for i in 0..self_rows {
+            for j in 0..other_cols {
+                for k in 0..self_cols {
                     res.data[i][j] += self.data[i][k] * other.data[k][j]
                 }
             }
@@ -105,10 +113,13 @@ impl Matrix for BasicMatrix {
     }
 
     fn scalar_multiplication(&self, scalar: &f64) -> Self {
-        let mut res = Self::zeroes(self.rows, self.cols);
+        let self_rows = self.get_rows();
+        let self_cols = self.get_cols();
 
-        for i in 0..self.rows {
-            for j in 0..self.cols {
+        let mut res = Self::zeroes(self_rows, self_cols);
+
+        for i in 0..self_rows {
+            for j in 0..self_cols {
                 res.data[i][j] = self.data[i][j] * scalar;
             }
         }
@@ -117,17 +128,17 @@ impl Matrix for BasicMatrix {
     }
 
     fn transpose(&mut self) -> () {
-        let mut res = Self::zeroes(self.cols, self.rows);
+        let self_rows = self.get_rows();
+        let self_cols = self.get_cols();
 
-        for i in 0..self.rows {
-            for j in 0..self.cols {
+        let mut res = Self::zeroes(self_cols, self_rows);
+
+        for i in 0..self_rows {
+            for j in 0..self_cols {
                 res.data[j][i] = self.data[i][j];
             }
         }
 
         self.data = res.data;
-        let temp = self.rows;
-        self.rows = self.cols;
-        self.cols = temp;
     }
 }
