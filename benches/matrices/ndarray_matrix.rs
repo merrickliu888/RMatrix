@@ -1,7 +1,7 @@
-use crate::matrices::benchmarking::{BenchmarkData, BenchmarkDatas};
+use crate::benchmarking::{BenchmarkData, BenchmarkResults};
 use ndarray::Array2;
 
-pub fn benchmark_ndarray_matrix(matrix_vectors: &Vec<Vec<Vec<f64>>>) -> BenchmarkDatas {
+pub fn benchmark_ndarray_matrix(matrix_vectors: &Vec<Vec<Vec<f64>>>) -> BenchmarkResults {
     let matrices = convert_to_ndarray_matrices(matrix_vectors);
 
     let matrix_addition_data = benchmark_matrix_addition(&matrices);
@@ -9,7 +9,7 @@ pub fn benchmark_ndarray_matrix(matrix_vectors: &Vec<Vec<Vec<f64>>>) -> Benchmar
     let matrix_multiplication_data = benchmark_matrix_multiplication(&matrices);
     let scalar_multiplication_data = benchmark_scalar_multiplication(&matrices);
 
-    BenchmarkDatas::new(
+    BenchmarkResults::new(
         matrix_addition_data,
         matrix_subtraction_data,
         matrix_multiplication_data,

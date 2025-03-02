@@ -19,5 +19,8 @@ def save_matrices(matrices: list[np.ndarray], filename: str):
         json.dump(serialized_matrices, f)
 
 if __name__ == "__main__":
-    matrices = generate_matrix_set(10, 1000, 10)
-    save_matrices(matrices, "matrices.json")
+    matrices1 = generate_matrix_set(10, 1000, 10)
+    save_matrices(matrices1, "matrices1.json")
+
+    matrices2 = generate_matrix_set(10, 1000, 10)
+    save_matrices(matrices2, "matrices2.json")

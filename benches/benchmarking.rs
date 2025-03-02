@@ -1,14 +1,20 @@
 use serde::Serialize;
+use std::fs::File;
+
+pub fn save_benchmark_results(filename: &str, results: &BenchmarkResults) {
+    let file = File::create(filename).unwrap();
+    serde_json::to_writer(file, results).unwrap();
+}
 
 #[derive(Serialize)]
-pub struct BenchmarkDatas {
+pub struct BenchmarkResults {
     pub matrix_addition: BenchmarkData,
     pub matrix_subtraction: BenchmarkData,
     pub matrix_multiplication: BenchmarkData,
     pub scalar_multiplication: BenchmarkData,
 }
 
-impl BenchmarkDatas {
+impl BenchmarkResults {
     pub fn new(
         matrix_addition: BenchmarkData,
         matrix_subtraction: BenchmarkData,

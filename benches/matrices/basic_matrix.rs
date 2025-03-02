@@ -1,7 +1,7 @@
-use crate::matrices::benchmarking::{BenchmarkData, BenchmarkDatas};
+use crate::benchmarking::{BenchmarkData, BenchmarkResults};
 use rmatrix::matrices::basic_matrix::BasicMatrix;
 
-pub fn benchmark_basic_matrix(matrix_vectors: &Vec<Vec<Vec<f64>>>) -> BenchmarkDatas {
+pub fn benchmark_basic_matrix(matrix_vectors: &Vec<Vec<Vec<f64>>>) -> BenchmarkResults {
     let matrices = convert_to_basic_matrices(matrix_vectors);
 
     let matrix_addition_data = benchmark_matrix_addition(&matrices);
@@ -9,7 +9,7 @@ pub fn benchmark_basic_matrix(matrix_vectors: &Vec<Vec<Vec<f64>>>) -> BenchmarkD
     let matrix_multiplication_data = benchmark_matrix_multiplication(&matrices);
     let scalar_multiplication_data = benchmark_scalar_multiplication(&matrices);
 
-    BenchmarkDatas::new(
+    BenchmarkResults::new(
         matrix_addition_data,
         matrix_subtraction_data,
         matrix_multiplication_data,
