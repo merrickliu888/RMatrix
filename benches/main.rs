@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::BufReader;
 mod matrices;
 use matrices::basic_matrix::benchmark_basic_matrix;
-use matrices::benchmark_data::BenchmarkDatas;
+use matrices::benchmarking::BenchmarkDatas;
 use matrices::ndarray_matrix::benchmark_ndarray_matrix;
 
 fn main() {

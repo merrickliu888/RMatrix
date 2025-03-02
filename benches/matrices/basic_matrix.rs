@@ -1,4 +1,4 @@
-use crate::matrices::benchmark_data::{BenchmarkData, BenchmarkDatas};
+use crate::matrices::benchmarking::{BenchmarkData, BenchmarkDatas};
 use rmatrix::matrices::basic_matrix::BasicMatrix;
 
 pub fn benchmark_basic_matrix(matrix_vectors: &Vec<Vec<Vec<f64>>>) -> BenchmarkDatas {

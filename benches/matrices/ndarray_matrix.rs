@@ -1,4 +1,4 @@
-use crate::matrices::benchmark_data::{BenchmarkData, BenchmarkDatas};
+use crate::matrices::benchmarking::{BenchmarkData, BenchmarkDatas};
 use ndarray::Array2;
 
 pub fn benchmark_ndarray_matrix(matrix_vectors: &Vec<Vec<Vec<f64>>>) -> BenchmarkDatas {

@@ -1,3 +1,3 @@
 pub mod basic_matrix;
-pub mod benchmark_data;
+pub mod benchmarking;
 pub mod ndarray_matrix;
