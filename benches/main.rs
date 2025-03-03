@@ -8,9 +8,11 @@ use std::fs::File;
 use std::io::BufReader;
 
 fn main() {
-    let matrices = load_matrices("./benches/matrices.json");
-    let basic_matrix_results = benchmark_basic_matrix(&matrices);
-    let ndarray_matrix_results = benchmark_ndarray_matrix(&matrices);
+    let matrices1 = load_matrices("./benches/matrices1.json");
+    let matrices2 = load_matrices("./benches/matrices2.json");
+
+    let basic_matrix_results = benchmark_basic_matrix(&matrices1, &matrices2);
+    let ndarray_matrix_results = benchmark_ndarray_matrix(&matrices1, &matrices2);
 
     save_benchmark_results(
         "./benches/benchmark_results/basic_matrix_results.json",
