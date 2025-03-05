@@ -1,4 +1,4 @@
-use crate::benchmarking::{BenchmarkData, BenchmarkResults};
+use crate::benchmarking::{benchmark_function, BenchmarkData, BenchmarkResults};
 use ndarray::Array2;
 
 pub fn benchmark_ndarray_matrix(
@@ -40,6 +40,18 @@ fn benchmark_matrix_addition(
 ) -> BenchmarkData {
     let mut sizes = Vec::new();
     let mut times = Vec::new();
+
+    for i in 0..matrices1.len() {
+        sizes.push(matrices1[i].shape()[0]);
+        let time = benchmark_function(
+            || {
+                let _ = &matrices1[i] + &matrices2[i];
+            },
+            10,
+        );
+        times.push(time);
+    }
+
     BenchmarkData::new(sizes, times)
 }
 
@@ -49,6 +61,18 @@ fn benchmark_matrix_subtraction(
 ) -> BenchmarkData {
     let mut sizes = Vec::new();
     let mut times = Vec::new();
+
+    for i in 0..matrices1.len() {
+        sizes.push(matrices1[i].shape()[0]);
+        let time = benchmark_function(
+            || {
+                let _ = &matrices1[i] - &matrices2[i];
+            },
+            10,
+        );
+        times.push(time);
+    }
+
     BenchmarkData::new(sizes, times)
 }
 
@@ -58,11 +82,35 @@ fn benchmark_matrix_multiplication(
 ) -> BenchmarkData {
     let mut sizes = Vec::new();
     let mut times = Vec::new();
+
+    for i in 0..matrices1.len() {
+        sizes.push(matrices1[i].shape()[0]);
+        let time = benchmark_function(
+            || {
+                let _ = matrices1[i].dot(&matrices2[i]);
+            },
+            10,
+        );
+        times.push(time);
+    }
+
     BenchmarkData::new(sizes, times)
 }
 
 fn benchmark_scalar_multiplication(matrices1: &Vec<Array2<f64>>, scalar: f64) -> BenchmarkData {
     let mut sizes = Vec::new();
     let mut times = Vec::new();
+
+    for i in 0..matrices1.len() {
+        sizes.push(matrices1[i].shape()[0]);
+        let time = benchmark_function(
+            || {
+                let _ = scalar * &matrices1[i];
+            },
+            10,
+        );
+        times.push(time);
+    }
+
     BenchmarkData::new(sizes, times)
 }
