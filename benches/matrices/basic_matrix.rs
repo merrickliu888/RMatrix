@@ -43,7 +43,7 @@ fn benchmark_matrix_addition(
             || {
                 let _ = matrices1[i].matrix_addition(&matrices2[i]);
             },
-            iter = 10,
+            10,
         );
         times.push(time);
     }
@@ -65,7 +65,7 @@ fn benchmark_matrix_subtraction(
             || {
                 let _ = matrices1[i].matrix_subtraction(&matrices2[i]);
             },
-            iter = 10,
+            10,
         );
         times.push(time);
     }
@@ -87,7 +87,7 @@ fn benchmark_matrix_multiplication(
             || {
                 let _ = matrices1[i].matrix_multiplication(&matrices2[i]);
             },
-            iter = 10,
+            10,
         );
         times.push(time);
     }
@@ -106,7 +106,7 @@ fn benchmark_scalar_multiplication(matrices1: &Vec<BasicMatrix>, scalar: f64) ->
             || {
                 let _ = matrices1[i].scalar_multiplication(&scalar);
             },
-            iter = 10,
+            10,
         );
         times.push(time);
     }
