@@ -1,5 +1,6 @@
-use crate::benchmarking::{BenchmarkData, BenchmarkResults};
+use crate::benchmarking::{benchmark_function, BenchmarkData, BenchmarkResults};
 use rmatrix::matrices::basic_matrix::BasicMatrix;
+use rmatrix::Matrix;
 
 pub fn benchmark_basic_matrix(
     matrix_vectors1: &Vec<Vec<Vec<f64>>>,
@@ -22,30 +23,93 @@ pub fn benchmark_basic_matrix(
 }
 
 fn convert_to_basic_matrices(matrix_vectors: &Vec<Vec<Vec<f64>>>) -> Vec<BasicMatrix> {
-    Vec::new()
+    matrix_vectors
+        .iter()
+        .map(|matrix| BasicMatrix::new(matrix.clone()))
+        .collect()
 }
 
 fn benchmark_matrix_addition(
     matrices1: &Vec<BasicMatrix>,
     matrices2: &Vec<BasicMatrix>,
 ) -> BenchmarkData {
-    BenchmarkData::new(Vec::new(), Vec::new())
+    let mut sizes = Vec::new();
+    let mut times = Vec::new();
+
+    for i in 0..matrices1.len() {
+        sizes.push(matrices1[i].get_rows());
+
+        let time = benchmark_function(
+            || {
+                let _ = matrices1[i].matrix_addition(&matrices2[i]);
+            },
+            iter = 10,
+        );
+        times.push(time);
+    }
+
+    BenchmarkData::new(sizes, times)
 }
 
 fn benchmark_matrix_subtraction(
     matrices1: &Vec<BasicMatrix>,
     matrices2: &Vec<BasicMatrix>,
 ) -> BenchmarkData {
-    BenchmarkData::new(Vec::new(), Vec::new())
+    let mut sizes = Vec::new();
+    let mut times = Vec::new();
+
+    for i in 0..matrices1.len() {
+        sizes.push(matrices1[i].get_rows());
+
+        let time = benchmark_function(
+            || {
+                let _ = matrices1[i].matrix_subtraction(&matrices2[i]);
+            },
+            iter = 10,
+        );
+        times.push(time);
+    }
+
+    BenchmarkData::new(sizes, times)
 }
 
 fn benchmark_matrix_multiplication(
     matrices1: &Vec<BasicMatrix>,
     matrices2: &Vec<BasicMatrix>,
 ) -> BenchmarkData {
-    BenchmarkData::new(Vec::new(), Vec::new())
+    let mut sizes = Vec::new();
+    let mut times = Vec::new();
+
+    for i in 0..matrices1.len() {
+        sizes.push(matrices1[i].get_rows());
+
+        let time = benchmark_function(
+            || {
+                let _ = matrices1[i].matrix_multiplication(&matrices2[i]);
+            },
+            iter = 10,
+        );
+        times.push(time);
+    }
+
+    BenchmarkData::new(sizes, times)
 }
 
 fn benchmark_scalar_multiplication(matrices1: &Vec<BasicMatrix>, scalar: f64) -> BenchmarkData {
-    BenchmarkData::new(Vec::new(), Vec::new())
+    let mut sizes = Vec::new();
+    let mut times = Vec::new();
+
+    for i in 0..matrices1.len() {
+        sizes.push(matrices1[i].get_rows());
+
+        let time = benchmark_function(
+            || {
+                let _ = matrices1[i].scalar_multiplication(&scalar);
+            },
+            iter = 10,
+        );
+        times.push(time);
+    }
+
+    BenchmarkData::new(sizes, times)
 }

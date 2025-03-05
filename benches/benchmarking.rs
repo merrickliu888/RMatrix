@@ -1,5 +1,16 @@
 use serde::Serialize;
 use std::fs::File;
+use std::time::Instant;
+
+pub fn benchmark_function(func: impl Fn(), iter: usize) -> f64 {
+    let mut total_time_elapsed: f64 = 0.0;
+    for _ in 0..iter {
+        let start = Instant::now();
+        func();
+        total_time_elapsed += start.elapsed().as_secs_f64();
+    }
+    total_time_elapsed / iter as f64
+}
 
 pub fn save_benchmark_results(filename: &str, results: &BenchmarkResults) {
     let file = File::create(filename).unwrap();
