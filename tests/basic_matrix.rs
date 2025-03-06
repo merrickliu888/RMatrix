@@ -1,6 +1,6 @@
-use rmatrix::matrices::basic_matrix::*;
 use rmatrix::Matrix;
-use std::panic::{catch_unwind, AssertUnwindSafe};
+use rmatrix::matrices::basic_matrix::*;
+use std::panic::{AssertUnwindSafe, catch_unwind};
 
 #[test]
 fn test_new() {
@@ -142,25 +142,8 @@ fn test_scalar_multiplication() {
     let matrix = BasicMatrix::new(vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
     let scalar = 2.0;
 
-    let result = matrix.scalar_multiplication(&scalar);
+    let result = matrix.scalar_multiplication(scalar);
 
     // Check result
     assert_eq!(*result.get_data(), vec![vec![2.0, 4.0], vec![6.0, 8.0]]);
-}
-
-#[test]
-fn test_transpose() {
-    let mut matrix = BasicMatrix::new(vec![vec![1.0, 2.0, 3.0], vec![4.0, 5.0, 6.0]]);
-
-    matrix.transpose();
-
-    // Check dimensions are swapped
-    assert_eq!(matrix.get_rows(), 3);
-    assert_eq!(matrix.get_cols(), 2);
-
-    // Check data is transposed
-    assert_eq!(
-        *matrix.get_data(),
-        vec![vec![1.0, 4.0], vec![2.0, 5.0], vec![3.0, 6.0]]
-    );
 }

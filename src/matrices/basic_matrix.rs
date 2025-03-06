@@ -25,6 +25,8 @@ impl BasicMatrix {
 }
 
 impl Matrix for BasicMatrix {
+    type Implementation = Self;
+
     fn zeroes(rows: usize, cols: usize) -> Self {
         Self {
             data: vec![vec![0.0; cols]; rows],
@@ -113,7 +115,7 @@ impl Matrix for BasicMatrix {
         res
     }
 
-    fn scalar_multiplication(&self, scalar: &f64) -> Self {
+    fn scalar_multiplication(&self, scalar: f64) -> Self {
         let self_rows = self.get_rows();
         let self_cols = self.get_cols();
 
@@ -126,20 +128,5 @@ impl Matrix for BasicMatrix {
         }
 
         res
-    }
-
-    fn transpose(&mut self) -> () {
-        let self_rows = self.get_rows();
-        let self_cols = self.get_cols();
-
-        let mut res = Self::zeroes(self_cols, self_rows);
-
-        for i in 0..self_rows {
-            for j in 0..self_cols {
-                res.data[j][i] = self.data[i][j];
-            }
-        }
-
-        self.data = res.data;
     }
 }

@@ -1,4 +1,6 @@
 pub trait Matrix {
+    type Implementation: Matrix;
+
     fn zeroes(rows: usize, cols: usize) -> Self;
 
     fn identity(size: usize) -> Self;
@@ -9,9 +11,7 @@ pub trait Matrix {
 
     fn matrix_multiplication(&self, other: &Self) -> Self;
 
-    fn scalar_multiplication(&self, scalar: &f64) -> Self;
-
-    fn transpose(&mut self) -> ();
+    fn scalar_multiplication(&self, scalar: f64) -> Self;
 }
 
 pub mod matrices;
