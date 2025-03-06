@@ -38,6 +38,10 @@ impl OneDVecMatrix {
             .map(|chunk| chunk.to_vec())
             .collect()
     }
+
+    pub fn get(&self, row: usize, col: usize) -> f64 {
+        self.data[row * self.cols + col]
+    }
 }
 
 impl Matrix for OneDVecMatrix {
