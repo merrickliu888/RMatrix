@@ -1,6 +1,6 @@
-use crate::benchmarking::{benchmark_function, BenchmarkData, BenchmarkResults};
-use rmatrix::matrices::basic_matrix::BasicMatrix;
+use crate::benchmarking::{BenchmarkData, BenchmarkResults, benchmark_function};
 use rmatrix::Matrix;
+use rmatrix::matrices::basic_matrix::BasicMatrix;
 
 pub fn benchmark_basic_matrix(
     matrix_vectors1: &Vec<Vec<Vec<f64>>>,
@@ -104,7 +104,7 @@ fn benchmark_scalar_multiplication(matrices1: &Vec<BasicMatrix>, scalar: f64) ->
 
         let time = benchmark_function(
             || {
-                let _ = matrices1[i].scalar_multiplication(&scalar);
+                let _ = matrices1[i].scalar_multiplication(scalar);
             },
             10,
         );

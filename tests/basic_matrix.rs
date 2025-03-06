@@ -7,13 +7,7 @@ fn test_new() {
     let data = vec![vec![1.0, 2.0], vec![3.0, 4.0]];
     let matrix = BasicMatrix::new(data.clone());
 
-    // We need to implement getters to properly test this
-    // For now, we'll test indirectly through other methods
-    let identity = BasicMatrix::identity(2);
-    let result = matrix.matrix_multiplication(&identity);
-
-    // Should be unchanged after multiplying by identity
-    assert_eq!(*result.get_data(), data);
+    assert_eq!(*matrix.get_data(), data);
 }
 
 #[test]

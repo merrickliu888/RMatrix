@@ -1,8 +1,8 @@
-use rmatrix::matrices::basic_matrix::BasicMatrix;
 use rmatrix::Matrix;
+use rmatrix::matrices::basic_matrix::BasicMatrix;
 
 fn main() {
-    let mut matrix1 = BasicMatrix::new(vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
+    let matrix1 = BasicMatrix::new(vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
     let matrix2 = BasicMatrix::new(vec![vec![5.0, 6.0], vec![7.0, 8.0]]);
 
     // Addition
@@ -15,10 +15,7 @@ fn main() {
     let matrix_product = matrix1.matrix_multiplication(&matrix2);
 
     // Scalar multiplication
-    let matrix_scalar_product = matrix1.scalar_multiplication(&2.0);
-
-    // Transpose
-    matrix1.transpose();
+    let matrix_scalar_product = matrix1.scalar_multiplication(2.0);
 
     println!("{:?}", matrix_sum);
     println!("{:?}", matrix_difference);
