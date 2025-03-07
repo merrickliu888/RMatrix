@@ -1,5 +1,11 @@
 pub trait Matrix {
-    type Implementation: Matrix;
+    fn new(data: Vec<Vec<f64>>) -> Self;
+
+    fn shape(&self) -> (usize, usize);
+
+    fn num_rows(&self) -> usize;
+
+    fn num_cols(&self) -> usize;
 
     fn zeroes(rows: usize, cols: usize) -> Self;
 

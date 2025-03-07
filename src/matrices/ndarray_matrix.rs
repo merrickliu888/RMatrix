@@ -8,7 +8,13 @@ pub struct NdarrayMatrix {
 }
 
 impl NdarrayMatrix {
-    pub fn new(data: Vec<Vec<f64>>) -> Self {
+    pub fn get_data(&self) -> &Array2<f64> {
+        &self.data
+    }
+}
+
+impl Matrix for NdarrayMatrix {
+    fn new(data: Vec<Vec<f64>>) -> Self {
         let shape = (data.len(), data[0].len());
         let converted_data =
             Array2::from_shape_vec(shape, data.iter().flatten().cloned().collect())
@@ -18,21 +24,17 @@ impl NdarrayMatrix {
         }
     }
 
-    pub fn get_rows(&self) -> usize {
+    fn shape(&self) -> (usize, usize) {
+        self.data.dim()
+    }
+
+    fn num_rows(&self) -> usize {
         self.data.nrows()
     }
 
-    pub fn get_cols(&self) -> usize {
+    fn num_cols(&self) -> usize {
         self.data.ncols()
     }
-
-    pub fn get_data(&self) -> &Array2<f64> {
-        &self.data
-    }
-}
-
-impl Matrix for NdarrayMatrix {
-    type Implementation = Self;
 
     fn zeroes(rows: usize, cols: usize) -> Self {
         let shape = (rows, cols);

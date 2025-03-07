@@ -1,9 +1,9 @@
 mod benchmarking;
-mod matrices;
 
-use benchmarking::save_benchmark_results;
-use matrices::basic_matrix::benchmark_basic_matrix;
-use matrices::ndarray_matrix::benchmark_ndarray_matrix;
+use benchmarking::{benchmark_matrix, save_benchmark_results};
+use rmatrix::matrices::basic_matrix::BasicMatrix;
+use rmatrix::matrices::ndarray_matrix::NdarrayMatrix;
+use rmatrix::matrices::one_d_vec_matrix::OneDVecMatrix;
 use std::env;
 use std::fs::File;
 use std::io::BufReader;
@@ -23,7 +23,7 @@ fn main() {
         && (run_all || args.contains(&String::from("basic_matrix")))
     {
         println!("Benchmarking basic matrix...");
-        let basic_matrix_results = benchmark_basic_matrix(&matrices1, &matrices2);
+        let basic_matrix_results = benchmark_matrix::<BasicMatrix>(&matrices1, &matrices2);
         save_benchmark_results(
             "./benches/benchmark_results/basic_matrix_results.json",
             &basic_matrix_results,
@@ -35,12 +35,24 @@ fn main() {
         && (run_all || args.contains(&String::from("ndarray_matrix")))
     {
         println!("Benchmarking ndarray matrix...");
-        let ndarray_matrix_results = benchmark_ndarray_matrix(&matrices1, &matrices2);
+        let ndarray_matrix_results = benchmark_matrix::<NdarrayMatrix>(&matrices1, &matrices2);
         save_benchmark_results(
             "./benches/benchmark_results/ndarray_matrix_results.json",
             &ndarray_matrix_results,
         );
         println!("ndarray matrix benchmark completed.");
+    }
+
+    if !args.contains(&String::from("exclude_one_d_vec_matrix"))
+        && (run_all || args.contains(&String::from("one_d_vec_matrix")))
+    {
+        println!("Benchmarking one_d_vec_matrix...");
+        let one_d_vec_matrix_results = benchmark_matrix::<OneDVecMatrix>(&matrices1, &matrices2);
+        save_benchmark_results(
+            "./benches/benchmark_results/one_d_vec_matrix_results.json",
+            &one_d_vec_matrix_results,
+        );
+        println!("one_d_vec_matrix benchmark completed.");
     }
 
     println!("Benchmark completed.");

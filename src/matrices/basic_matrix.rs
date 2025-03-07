@@ -4,32 +4,37 @@ use crate::Matrix;
 #[derive(Debug)]
 pub struct BasicMatrix {
     data: Vec<Vec<f64>>,
+    shape: (usize, usize),
 }
 
 impl BasicMatrix {
-    pub fn new(data: Vec<Vec<f64>>) -> Self {
-        Self { data }
-    }
-
-    pub fn get_rows(&self) -> usize {
-        self.data.len()
-    }
-
-    pub fn get_cols(&self) -> usize {
-        self.data[0].len()
-    }
-
     pub fn get_data(&self) -> &Vec<Vec<f64>> {
         &self.data
     }
 }
 
 impl Matrix for BasicMatrix {
-    type Implementation = Self;
+    fn new(data: Vec<Vec<f64>>) -> Self {
+        let shape = (data.len(), data[0].len());
+        Self { data, shape }
+    }
+
+    fn shape(&self) -> (usize, usize) {
+        self.shape
+    }
+
+    fn num_rows(&self) -> usize {
+        self.shape.0
+    }
+
+    fn num_cols(&self) -> usize {
+        self.shape.1
+    }
 
     fn zeroes(rows: usize, cols: usize) -> Self {
         Self {
             data: vec![vec![0.0; cols]; rows],
+            shape: (rows, cols),
         }
     }
 
@@ -38,14 +43,17 @@ impl Matrix for BasicMatrix {
         for i in 0..size {
             data[i][i] = 1.0;
         }
-        Self { data }
+        Self {
+            data,
+            shape: (size, size),
+        }
     }
 
     fn matrix_addition(&self, other: &Self) -> Self {
-        let self_rows = self.get_rows();
-        let self_cols = self.get_cols();
-        let other_rows = other.get_rows();
-        let other_cols = other.get_cols();
+        let self_rows = self.num_rows();
+        let self_cols = self.num_cols();
+        let other_rows = other.num_rows();
+        let other_cols = other.num_cols();
 
         if self_rows != other_rows || self_cols != other_cols {
             panic!(
@@ -66,10 +74,10 @@ impl Matrix for BasicMatrix {
     }
 
     fn matrix_subtraction(&self, other: &Self) -> Self {
-        let self_rows = self.get_rows();
-        let self_cols = self.get_cols();
-        let other_rows = other.get_rows();
-        let other_cols = other.get_cols();
+        let self_rows = self.num_rows();
+        let self_cols = self.num_cols();
+        let other_rows = other.num_rows();
+        let other_cols = other.num_cols();
 
         if self_rows != other_rows || self_cols != other_cols {
             panic!(
@@ -90,10 +98,10 @@ impl Matrix for BasicMatrix {
     }
 
     fn matrix_multiplication(&self, other: &Self) -> Self {
-        let self_rows = self.get_rows();
-        let self_cols = self.get_cols();
-        let other_rows = other.get_rows();
-        let other_cols = other.get_cols();
+        let self_rows = self.num_rows();
+        let self_cols = self.num_cols();
+        let other_rows = other.num_rows();
+        let other_cols = other.num_cols();
 
         if self_cols != other_rows {
             panic!(
@@ -116,8 +124,8 @@ impl Matrix for BasicMatrix {
     }
 
     fn scalar_multiplication(&self, scalar: f64) -> Self {
-        let self_rows = self.get_rows();
-        let self_cols = self.get_cols();
+        let self_rows = self.num_rows();
+        let self_cols = self.num_cols();
 
         let mut res = Self::zeroes(self_rows, self_cols);
 
