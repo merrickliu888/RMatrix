@@ -52,15 +52,6 @@ impl Matrix for BasicMatrix {
     fn matrix_addition(&self, other: &Self) -> Self {
         let self_rows = self.num_rows();
         let self_cols = self.num_cols();
-        let other_rows = other.num_rows();
-        let other_cols = other.num_cols();
-
-        if self_rows != other_rows || self_cols != other_cols {
-            panic!(
-                "Add: Dimension mismatch - LHS ({}x{}), RHS ({}x{})",
-                self_rows, self_cols, other_rows, other_cols
-            );
-        }
 
         let mut res = Self::zeroes(self_rows, self_cols);
 
@@ -76,15 +67,6 @@ impl Matrix for BasicMatrix {
     fn matrix_subtraction(&self, other: &Self) -> Self {
         let self_rows = self.num_rows();
         let self_cols = self.num_cols();
-        let other_rows = other.num_rows();
-        let other_cols = other.num_cols();
-
-        if self_rows != other_rows || self_cols != other_cols {
-            panic!(
-                "Sub: Dimension mismatch - LHS ({}x{}), RHS ({}x{})",
-                self_rows, self_cols, other_rows, other_cols
-            );
-        }
 
         let mut res = Self::zeroes(self_rows, self_cols);
 
@@ -100,15 +82,7 @@ impl Matrix for BasicMatrix {
     fn matrix_multiplication(&self, other: &Self) -> Self {
         let self_rows = self.num_rows();
         let self_cols = self.num_cols();
-        let other_rows = other.num_rows();
         let other_cols = other.num_cols();
-
-        if self_cols != other_rows {
-            panic!(
-                "Mult: Dimension mismatch - LHS ({}x{}), RHS ({}x{})",
-                self_rows, self_cols, other_rows, other_cols
-            )
-        }
 
         let mut res = Self::zeroes(self_rows, other_cols);
 

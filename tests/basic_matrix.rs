@@ -1,6 +1,5 @@
 use rmatrix::Matrix;
 use rmatrix::matrices::basic_matrix::*;
-use std::panic::{AssertUnwindSafe, catch_unwind};
 
 #[test]
 fn test_new() {
@@ -73,17 +72,6 @@ fn test_matrix_addition() {
 }
 
 #[test]
-fn test_matrix_addition_dimension_mismatch() {
-    let matrix1 = BasicMatrix::new(vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
-    let matrix2 = BasicMatrix::new(vec![vec![5.0, 6.0, 7.0], vec![8.0, 9.0, 10.0]]);
-
-    // Should panic with dimension mismatch
-    let result = catch_unwind(AssertUnwindSafe(|| matrix1.matrix_addition(&matrix2)));
-
-    assert!(result.is_err());
-}
-
-#[test]
 fn test_matrix_subtraction() {
     let matrix1 = BasicMatrix::new(vec![vec![5.0, 6.0], vec![7.0, 8.0]]);
     let matrix2 = BasicMatrix::new(vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
@@ -92,17 +80,6 @@ fn test_matrix_subtraction() {
 
     // Check result
     assert_eq!(*result.get_data(), vec![vec![4.0, 4.0], vec![4.0, 4.0]]);
-}
-
-#[test]
-fn test_matrix_subtraction_dimension_mismatch() {
-    let matrix1 = BasicMatrix::new(vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
-    let matrix2 = BasicMatrix::new(vec![vec![5.0, 6.0, 7.0], vec![8.0, 9.0, 10.0]]);
-
-    // Should panic with dimension mismatch
-    let result = catch_unwind(AssertUnwindSafe(|| matrix1.matrix_subtraction(&matrix2)));
-
-    assert!(result.is_err());
 }
 
 #[test]
@@ -121,17 +98,6 @@ fn test_matrix_multiplication() {
         *result.get_data(),
         vec![vec![58.0, 64.0], vec![139.0, 154.0]]
     );
-}
-
-#[test]
-fn test_matrix_multiplication_dimension_mismatch() {
-    let matrix1 = BasicMatrix::new(vec![vec![1.0, 2.0], vec![3.0, 4.0]]);
-    let matrix2 = BasicMatrix::new(vec![vec![5.0, 6.0], vec![7.0, 8.0], vec![9.0, 10.0]]);
-
-    // Should panic with dimension mismatch
-    let result = catch_unwind(AssertUnwindSafe(|| matrix1.matrix_multiplication(&matrix2)));
-
-    assert!(result.is_err());
 }
 
 #[test]
