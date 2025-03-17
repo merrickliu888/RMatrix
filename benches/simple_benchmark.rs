@@ -2,8 +2,10 @@ mod benchmarking;
 
 use benchmarking::{benchmark_matrix, save_benchmark_results};
 use rmatrix::matrices::basic_matrix::BasicMatrix;
+use rmatrix::matrices::blocked_matrix::BlockedMatrix;
 use rmatrix::matrices::ndarray_matrix::NdarrayMatrix;
 use rmatrix::matrices::one_d_vec_matrix::OneDVecMatrix;
+
 use std::env;
 use std::fs::File;
 use std::io::BufReader;
@@ -53,6 +55,18 @@ fn main() {
             &one_d_vec_matrix_results,
         );
         println!("one_d_vec_matrix benchmark completed.");
+    }
+
+    if !args.contains(&String::from("exclude_blocked_matrix"))
+        && (run_all || args.contains(&String::from("blocked_matrix")))
+    {
+        println!("Benchmarking blocked matrix...");
+        let blocked_matrix_results = benchmark_matrix::<BlockedMatrix>(&matrices1, &matrices2);
+        save_benchmark_results(
+            "./benches/benchmark_results/blocked_matrix_results.json",
+            &blocked_matrix_results,
+        );
+        println!("blocked matrix benchmark completed.");
     }
 
     println!("Benchmark completed.");

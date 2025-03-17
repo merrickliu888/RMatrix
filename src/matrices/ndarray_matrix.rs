@@ -63,7 +63,7 @@ impl Matrix for NdarrayMatrix {
 
     fn matrix_multiplication(&self, other: &Self) -> Self {
         Self {
-            data: &self.data * &other.data,
+            data: self.data.dot(&other.data),
         }
     }
 

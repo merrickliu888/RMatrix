@@ -19,6 +19,7 @@ impl OneDVecMatrix {
         &self.data
     }
 
+    #[inline(always)]
     pub fn get(&self, row: usize, col: usize) -> f64 {
         self.data[row * self.num_cols() + col]
     }
@@ -89,10 +90,6 @@ impl Matrix for OneDVecMatrix {
     }
 
     fn matrix_multiplication(&self, other: &Self) -> Self {
-        if self.num_cols() != other.num_rows() {
-            panic!("Matrix multiplication dimensions do not match");
-        }
-
         let self_rows = self.num_rows();
         let self_cols = self.num_cols();
         let other_cols = other.num_cols();
@@ -102,8 +99,7 @@ impl Matrix for OneDVecMatrix {
         for i in 0..self_rows {
             for j in 0..other_cols {
                 for k in 0..self_cols {
-                    res[i * other_cols + j] +=
-                        self.data[i * self_cols + k] * other.data[k * other_cols + j];
+                    res[i * other_cols + j] += self.get(i, k) * other.get(k, j);
                 }
             }
         }

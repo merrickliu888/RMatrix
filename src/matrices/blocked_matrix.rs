@@ -1,6 +1,6 @@
 use crate::Matrix;
 use std::cmp::min;
-static BLOCK_SIZE: usize = 128;
+static BLOCK_SIZE: usize = 8;
 
 /// Representing matrix as a one-dimensional vector with blocking
 #[derive(Debug)]
@@ -21,8 +21,23 @@ impl BlockedMatrix {
         &self.data
     }
 
+    #[inline(always)]
     pub fn get(&self, row: usize, col: usize) -> f64 {
         self.data[row * self.num_cols() + col]
+    }
+
+    fn multiply_block(&self, bi: usize, bj: usize, bk: usize, other: &Self, res: &mut Vec<f64>) {
+        let bi_end = min(bi + BLOCK_SIZE, self.num_rows());
+        let bj_end = min(bj + BLOCK_SIZE, other.num_cols());
+        let bk_end = min(bk + BLOCK_SIZE, self.num_cols());
+
+        for i in bi..bi_end {
+            for j in bj..bj_end {
+                for k in bk..bk_end {
+                    res[i * other.num_cols() + j] += self.get(i, k) * other.get(k, j);
+                }
+            }
+        }
     }
 }
 
@@ -109,15 +124,19 @@ impl Matrix for BlockedMatrix {
     }
 
     fn matrix_multiplication(&self, other: &Self) -> Self {
-        if self.num_cols() != other.num_rows() {
-            panic!("Matrix multiplication dimensions do not match");
-        }
-
         let self_rows = self.num_rows();
-        // let self_cols = self.num_cols();
+        let self_cols = self.num_cols();
         let other_cols = other.num_cols();
 
-        let res = vec![0.0; self_rows * other_cols];
+        let mut res = vec![0.0; self_rows * other_cols];
+
+        for bi in (0..self_rows).step_by(BLOCK_SIZE) {
+            for bj in (0..other_cols).step_by(BLOCK_SIZE) {
+                for bk in (0..self_cols).step_by(BLOCK_SIZE) {
+                    self.multiply_block(bi, bj, bk, other, &mut res);
+                }
+            }
+        }
 
         Self::new_from_vec(res, self_rows, other_cols)
     }
