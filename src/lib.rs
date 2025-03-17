@@ -7,6 +7,8 @@ pub trait Matrix {
 
     fn num_cols(&self) -> usize;
 
+    fn get_data(&self) -> Vec<Vec<f64>>;
+
     fn zeroes(rows: usize, cols: usize) -> Self;
 
     fn identity(size: usize) -> Self;

@@ -15,15 +15,8 @@ impl OneDVecMatrix {
         }
     }
 
-    pub fn get_data(&self) -> &Vec<f64> {
+    pub fn get_data_vec(&self) -> &Vec<f64> {
         &self.data
-    }
-
-    pub fn get_data_vec_vec(&self) -> Vec<Vec<f64>> {
-        self.data
-            .chunks(self.num_cols())
-            .map(|chunk| chunk.to_vec())
-            .collect()
     }
 
     pub fn get(&self, row: usize, col: usize) -> f64 {
@@ -49,6 +42,13 @@ impl Matrix for OneDVecMatrix {
 
     fn num_cols(&self) -> usize {
         self.shape.1
+    }
+
+    fn get_data(&self) -> Vec<Vec<f64>> {
+        self.data
+            .chunks(self.num_cols())
+            .map(|chunk| chunk.to_vec())
+            .collect()
     }
 
     fn zeroes(rows: usize, cols: usize) -> Self {

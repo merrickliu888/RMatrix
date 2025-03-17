@@ -7,12 +7,6 @@ pub struct BasicMatrix {
     shape: (usize, usize),
 }
 
-impl BasicMatrix {
-    pub fn get_data(&self) -> &Vec<Vec<f64>> {
-        &self.data
-    }
-}
-
 impl Matrix for BasicMatrix {
     fn new(data: Vec<Vec<f64>>) -> Self {
         let shape = (data.len(), data[0].len());
@@ -29,6 +23,10 @@ impl Matrix for BasicMatrix {
 
     fn num_cols(&self) -> usize {
         self.shape.1
+    }
+
+    fn get_data(&self) -> Vec<Vec<f64>> {
+        self.data.clone()
     }
 
     fn zeroes(rows: usize, cols: usize) -> Self {
