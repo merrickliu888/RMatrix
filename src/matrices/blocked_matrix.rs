@@ -1,5 +1,6 @@
 use crate::Matrix;
 use std::cmp::min;
+
 static BLOCK_SIZE: usize = 8;
 
 /// Representing matrix as a one-dimensional vector with blocking

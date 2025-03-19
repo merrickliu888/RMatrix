@@ -5,22 +5,29 @@ use crate::Matrix;
 pub struct TransposedViewMatrix {
     data: Vec<f64>,
     transposed_data: Vec<f64>,
+    transposed: bool,
     shape: (usize, usize),
 }
 
 impl TransposedViewMatrix {
-    fn new_from_vec(data: Vec<f64>, rows: usize, cols: usize) -> Self {
+    fn new_from_vec(data: Vec<f64>, rows: usize, cols: usize, eager: bool) -> Self {
         let mut transposed_data = vec![0.0; data.len()];
+        let mut transposed = false;
 
-        for i in 0..rows {
-            for j in 0..cols {
-                transposed_data[j * rows + i] = data[i * cols + j];
+        // If eager, we will transpose the data immediately.
+        if eager {
+            for i in 0..rows {
+                for j in 0..cols {
+                    transposed_data[j * rows + i] = data[i * cols + j];
+                }
             }
+            transposed = true;
         }
 
         Self {
             data,
             transposed_data,
+            transposed,
             shape: (rows, cols),
         }
     }
@@ -49,7 +56,7 @@ impl Matrix for TransposedViewMatrix {
         let rows = data.len();
         let cols = data[0].len();
         let data = data.into_iter().flatten().collect();
-        Self::new_from_vec(data, rows, cols)
+        Self::new_from_vec(data, rows, cols, true)
     }
 
     fn shape(&self) -> (usize, usize) {
@@ -75,6 +82,7 @@ impl Matrix for TransposedViewMatrix {
         Self {
             data: vec![0.0; rows * cols],
             transposed_data: vec![0.0; rows * cols],
+            transposed: true,
             shape: (rows, cols),
         }
     }
@@ -86,7 +94,7 @@ impl Matrix for TransposedViewMatrix {
             data[i * size + i] = 1.0;
         }
 
-        TransposedViewMatrix::new_from_vec(data, size, size)
+        TransposedViewMatrix::new_from_vec(data, size, size, true)
     }
 
     fn matrix_addition(&self, other: &Self) -> Self {
@@ -96,7 +104,7 @@ impl Matrix for TransposedViewMatrix {
             .zip(other.data.iter())
             .map(|(a, b)| a + b)
             .collect();
-        Self::new_from_vec(data, self.num_rows(), self.num_cols())
+        Self::new_from_vec(data, self.num_rows(), self.num_cols(), false)
     }
 
     fn matrix_subtraction(&self, other: &Self) -> Self {
@@ -106,7 +114,7 @@ impl Matrix for TransposedViewMatrix {
             .zip(other.data.iter())
             .map(|(a, b)| a - b)
             .collect();
-        Self::new_from_vec(data, self.num_rows(), self.num_cols())
+        Self::new_from_vec(data, self.num_rows(), self.num_cols(), false)
     }
 
     fn matrix_multiplication(&self, other: &Self) -> Self {
@@ -124,11 +132,11 @@ impl Matrix for TransposedViewMatrix {
             }
         }
 
-        Self::new_from_vec(res, self_rows, other_cols)
+        Self::new_from_vec(res, self_rows, other_cols, false)
     }
 
     fn scalar_multiplication(&self, scalar: f64) -> Self {
         let data = self.data.iter().map(|a| a * scalar).collect();
-        Self::new_from_vec(data, self.num_rows(), self.num_cols())
+        Self::new_from_vec(data, self.num_rows(), self.num_cols(), false)
     }
 }

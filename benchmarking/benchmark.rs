@@ -3,8 +3,10 @@ mod benchmarking;
 use benchmarking::{benchmark_matrix, save_benchmark_results};
 use rmatrix::matrices::basic_matrix::BasicMatrix;
 use rmatrix::matrices::blocked_matrix::BlockedMatrix;
+use rmatrix::matrices::multithread_matrix::MultithreadMatrix;
 use rmatrix::matrices::ndarray_matrix::NdarrayMatrix;
 use rmatrix::matrices::one_d_vec_matrix::OneDVecMatrix;
+use rmatrix::matrices::transposed_view_matrix::TransposedViewMatrix;
 
 use std::env;
 use std::fs::File;
@@ -67,6 +69,32 @@ fn main() {
             &blocked_matrix_results,
         );
         println!("blocked matrix benchmark completed.");
+    }
+
+    if !args.contains(&String::from("exclude_multithread_matrix"))
+        && (run_all || args.contains(&String::from("multithread_matrix")))
+    {
+        println!("Benchmarking multithread matrix...");
+        let multithread_matrix_results =
+            benchmark_matrix::<MultithreadMatrix>(&matrices1, &matrices2);
+        save_benchmark_results(
+            "./benches/benchmark_results/multithread_matrix_results.json",
+            &multithread_matrix_results,
+        );
+        println!("multithread matrix benchmark completed.");
+    }
+
+    if !args.contains(&String::from("exclude_transposed_view_matrix"))
+        && (run_all || args.contains(&String::from("transposed_view_matrix")))
+    {
+        println!("Benchmarking transposed view matrix...");
+        let transposed_view_matrix_results =
+            benchmark_matrix::<TransposedViewMatrix>(&matrices1, &matrices2);
+        save_benchmark_results(
+            "./benches/benchmark_results/transposed_view_matrix_results.json",
+            &transposed_view_matrix_results,
+        );
+        println!("transposed view matrix benchmark completed.");
     }
 
     println!("Benchmark completed.");

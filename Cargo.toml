@@ -4,21 +4,10 @@ version = "0.1.0"
 edition = "2024"
 
 [[bin]]
-name = "simple_benchmark"
-path = "benches/simple_benchmark.rs"
-
-[[bench]]
-name = "basic_matrix"
-path = "benches/criterion_benchmarks/basic_matrix.rs"
-harness = false
-
-[[bench]]
-name = "ndarray_matrix"
-path = "benches/criterion_benchmarks/ndarray_matrix.rs"
-harness = false
+name = "benchmark"
+path = "benchmarking/benchmark.rs"
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.139"
-criterion = { version = "0.5", features = ["html_reports"] }
 ndarray = "0.16.1"
