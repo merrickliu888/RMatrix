@@ -1,6 +1,6 @@
 target/
 Cargo.lock
 Pipfile.lock
-benches/matrices1.json
-benches/matrices2.json
-benches/benchmark_results/
+benchmarking/matrices1.json
+benchmarking/matrices2.json
+benchmarking/benchmark_results/
