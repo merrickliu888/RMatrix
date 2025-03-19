@@ -118,6 +118,10 @@ impl Matrix for TransposedViewMatrix {
     }
 
     fn matrix_multiplication(&self, other: &Self) -> Self {
+        if !other.transposed {
+            panic!("Other matrix must be transposed");
+        }
+
         let self_rows = self.num_rows();
         let self_cols = self.num_cols();
         let other_cols = other.num_cols();
@@ -127,6 +131,7 @@ impl Matrix for TransposedViewMatrix {
         for i in 0..self_rows {
             for j in 0..other_cols {
                 for k in 0..self_cols {
+                    // Expects other to be transposed
                     res[i * other_cols + j] += self.get(i, k) * other.get_transposed(j, k);
                 }
             }
