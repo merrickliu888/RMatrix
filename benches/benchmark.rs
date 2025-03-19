@@ -29,7 +29,7 @@ fn main() {
         println!("Benchmarking basic matrix...");
         let basic_matrix_results = benchmark_matrix::<BasicMatrix>(&matrices1, &matrices2);
         save_benchmark_results(
-            "./benchmarking/benchmark_results/basic_matrix_results.json",
+            "./benches/benchmark_results/basic_matrix_results.json",
             &basic_matrix_results,
         );
         println!("basic matrix benchmark completed.");
@@ -41,7 +41,7 @@ fn main() {
         println!("Benchmarking ndarray matrix...");
         let ndarray_matrix_results = benchmark_matrix::<NdarrayMatrix>(&matrices1, &matrices2);
         save_benchmark_results(
-            "./benchmarking/benchmark_results/ndarray_matrix_results.json",
+            "./benches/benchmark_results/ndarray_matrix_results.json",
             &ndarray_matrix_results,
         );
         println!("ndarray matrix benchmark completed.");
@@ -53,7 +53,7 @@ fn main() {
         println!("Benchmarking one_d_vec_matrix...");
         let one_d_vec_matrix_results = benchmark_matrix::<OneDVecMatrix>(&matrices1, &matrices2);
         save_benchmark_results(
-            "./benchmarking/benchmark_results/one_d_vec_matrix_results.json",
+            "./benches/benchmark_results/one_d_vec_matrix_results.json",
             &one_d_vec_matrix_results,
         );
         println!("one_d_vec_matrix benchmark completed.");
@@ -65,7 +65,7 @@ fn main() {
         println!("Benchmarking blocked matrix...");
         let blocked_matrix_results = benchmark_matrix::<BlockedMatrix>(&matrices1, &matrices2);
         save_benchmark_results(
-            "./benchmarking/benchmark_results/blocked_matrix_results.json",
+            "./benches/benchmark_results/blocked_matrix_results.json",
             &blocked_matrix_results,
         );
         println!("blocked matrix benchmark completed.");
@@ -78,7 +78,7 @@ fn main() {
         let multithread_matrix_results =
             benchmark_matrix::<MultithreadMatrix>(&matrices1, &matrices2);
         save_benchmark_results(
-            "./benchmarking/benchmark_results/multithread_matrix_results.json",
+            "./benches/benchmark_results/multithread_matrix_results.json",
             &multithread_matrix_results,
         );
         println!("multithread matrix benchmark completed.");
@@ -91,7 +91,7 @@ fn main() {
         let transposed_view_matrix_results =
             benchmark_matrix::<TransposedViewMatrix>(&matrices1, &matrices2);
         save_benchmark_results(
-            "./benchmarking/benchmark_results/transposed_view_matrix_results.json",
+            "./benches/benchmark_results/transposed_view_matrix_results.json",
             &transposed_view_matrix_results,
         );
         println!("transposed view matrix benchmark completed.");

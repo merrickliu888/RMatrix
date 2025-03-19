@@ -5,7 +5,7 @@ edition = "2024"
 
 [[bin]]
 name = "benchmark"
-path = "benchmarking/benchmark.rs"
+path = "benches/benchmark.rs"
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
