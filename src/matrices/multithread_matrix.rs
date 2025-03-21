@@ -1,4 +1,8 @@
 use crate::Matrix;
+use crossbeam::scope;
+use itertools::izip;
+
+static NUM_THREADS: usize = 10;
 
 /// Representing matrix as a one-dimensional vector
 #[derive(Debug)]
@@ -70,22 +74,44 @@ impl Matrix for MultithreadMatrix {
     }
 
     fn matrix_addition(&self, other: &Self) -> Self {
-        let data = self
-            .data
-            .iter()
-            .zip(other.data.iter())
-            .map(|(a, b)| a + b)
-            .collect();
+        let mut data = vec![0.0; self.num_rows() * self.num_cols()];
+        let chunk_size = (data.len() + NUM_THREADS - 1) / NUM_THREADS;
+        let chunks = data.chunks_mut(chunk_size);
+        let self_chunks = self.data.chunks(chunk_size);
+        let other_chunks = other.data.chunks(chunk_size);
+
+        scope(|s| {
+            for (data_chunk, self_chunk, other_chunk) in izip!(chunks, self_chunks, other_chunks) {
+                s.spawn(|_| {
+                    for i in 0..chunk_size {
+                        data_chunk[i] = self_chunk[i] + other_chunk[i];
+                    }
+                });
+            }
+        })
+        .unwrap();
+
         Self::new_from_vec(data, self.num_rows(), self.num_cols())
     }
 
     fn matrix_subtraction(&self, other: &Self) -> Self {
-        let data = self
-            .data
-            .iter()
-            .zip(other.data.iter())
-            .map(|(a, b)| a - b)
-            .collect();
+        let mut data = vec![0.0; self.num_rows() * self.num_cols()];
+        let chunk_size = (data.len() + NUM_THREADS - 1) / NUM_THREADS;
+        let chunks = data.chunks_mut(chunk_size);
+        let self_chunks = self.data.chunks(chunk_size);
+        let other_chunks = other.data.chunks(chunk_size);
+
+        scope(|s| {
+            for (data_chunk, self_chunk, other_chunk) in izip!(chunks, self_chunks, other_chunks) {
+                s.spawn(|_| {
+                    for i in 0..chunk_size {
+                        data_chunk[i] = self_chunk[i] - other_chunk[i];
+                    }
+                });
+            }
+        })
+        .unwrap();
+
         Self::new_from_vec(data, self.num_rows(), self.num_cols())
     }
 
@@ -108,7 +134,22 @@ impl Matrix for MultithreadMatrix {
     }
 
     fn scalar_multiplication(&self, scalar: f64) -> Self {
-        let data = self.data.iter().map(|a| a * scalar).collect();
+        let mut data = vec![0.0; self.num_rows() * self.num_cols()];
+        let chunk_size = (data.len() + NUM_THREADS - 1) / NUM_THREADS;
+        let chunks = data.chunks_mut(chunk_size);
+        let self_chunks = self.data.chunks(chunk_size);
+
+        scope(|s| {
+            for (data_chunk, self_chunk) in izip!(chunks, self_chunks) {
+                s.spawn(|_| {
+                    for i in 0..chunk_size {
+                        data_chunk[i] = self_chunk[i] * scalar;
+                    }
+                });
+            }
+        })
+        .unwrap();
+
         Self::new_from_vec(data, self.num_rows(), self.num_cols())
     }
 }
