@@ -4,6 +4,7 @@ use benchmarking::{benchmark_matrix, load_matrices, save_benchmark_results};
 use rmatrix::matrices::basic_matrix::BasicMatrix;
 use rmatrix::matrices::blas_matrix::BlasMatrix;
 use rmatrix::matrices::blocked_matrix::BlockedMatrix;
+use rmatrix::matrices::multithread_matrix::MultithreadMatrix;
 use rmatrix::matrices::ndarray_matrix::NdarrayMatrix;
 use rmatrix::matrices::one_d_vec_matrix::OneDVecMatrix;
 use rmatrix::matrices::transposed_view_matrix::TransposedViewMatrix;
@@ -92,6 +93,19 @@ fn main() {
             &blas_matrix_results,
         );
         println!("blas matrix benchmark completed.");
+    }
+
+    if !args.contains(&String::from("exclude_multithread_matrix"))
+        && (run_all || args.contains(&String::from("multithread_matrix")))
+    {
+        println!("Benchmarking multithread matrix...");
+        let multithread_matrix_results =
+            benchmark_matrix::<MultithreadMatrix>(&matrices1, &matrices2);
+        save_benchmark_results(
+            "./benches/benchmark_results/multithread_matrix_results.json",
+            &multithread_matrix_results,
+        );
+        println!("multithread matrix benchmark completed.");
     }
 
     println!("Benchmark completed.");

@@ -1,6 +1,7 @@
 use rmatrix::matrices::transposed_view_matrix::*;
 mod test_functions;
 use test_functions::*;
+
 #[test]
 fn transposed_view_matrix_test_new() {
     test_new::<TransposedViewMatrix>();
