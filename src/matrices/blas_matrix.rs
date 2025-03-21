@@ -4,14 +4,14 @@ use crate::Matrix;
 
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub enum CBLAS_LAYOUT {
+pub enum CBlasLayout {
     CblasRowMajor = 101,
     CblasColMajor = 102,
 }
 
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub enum CBLAS_TRANSPOSE {
+pub enum CBlasTranspose {
     CblasNoTrans = 111,
     CblasTrans = 112,
     CblasConjTrans = 113,
@@ -20,9 +20,9 @@ pub enum CBLAS_TRANSPOSE {
 #[link(name = "Accelerate", kind = "framework")]
 unsafe extern "C" {
     pub unsafe fn cblas_dgemm(
-        layout: CBLAS_LAYOUT,
-        transa: CBLAS_TRANSPOSE,
-        transb: CBLAS_TRANSPOSE,
+        layout: CBlasLayout,
+        transa: CBlasTranspose,
+        transb: CBlasTranspose,
         m: i32,
         n: i32,
         k: i32,
@@ -134,9 +134,9 @@ impl Matrix for BlasMatrix {
 
         unsafe {
             cblas_dgemm(
-                CBLAS_LAYOUT::CblasRowMajor,
-                CBLAS_TRANSPOSE::CblasNoTrans,
-                CBLAS_TRANSPOSE::CblasNoTrans,
+                CBlasLayout::CblasRowMajor,
+                CBlasTranspose::CblasNoTrans,
+                CBlasTranspose::CblasNoTrans,
                 self_rows as i32,
                 other_cols as i32,
                 self_cols as i32,
