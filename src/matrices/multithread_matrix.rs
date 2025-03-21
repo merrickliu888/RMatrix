@@ -1,8 +1,9 @@
 use crate::Matrix;
 use crossbeam::scope;
 use itertools::izip;
-
+use std::cmp::min;
 static NUM_THREADS: usize = 10;
+static BLOCK_SIZE: usize = 8;
 
 /// Representing matrix as a one-dimensional vector
 #[derive(Debug)]
@@ -26,6 +27,20 @@ impl MultithreadMatrix {
     #[inline(always)]
     pub fn get(&self, row: usize, col: usize) -> f64 {
         self.data[row * self.num_cols() + col]
+    }
+
+    fn multiply_block(&self, bi: usize, bj: usize, bk: usize, other: &Self, res: &mut Vec<f64>) {
+        let bi_end = min(bi + BLOCK_SIZE, self.num_rows());
+        let bj_end = min(bj + BLOCK_SIZE, other.num_cols());
+        let bk_end = min(bk + BLOCK_SIZE, self.num_cols());
+
+        for i in bi..bi_end {
+            for j in bj..bj_end {
+                for k in bk..bk_end {
+                    res[i * other.num_cols() + j] += self.get(i, k) * other.get(k, j);
+                }
+            }
+        }
     }
 }
 
@@ -122,10 +137,10 @@ impl Matrix for MultithreadMatrix {
 
         let mut res = vec![0.0; self_rows * other_cols];
 
-        for i in 0..self_rows {
-            for j in 0..other_cols {
-                for k in 0..self_cols {
-                    res[i * other_cols + j] += self.get(i, k) * other.get(k, j);
+        for bi in (0..self_rows).step_by(BLOCK_SIZE) {
+            for bj in (0..other_cols).step_by(BLOCK_SIZE) {
+                for bk in (0..self_cols).step_by(BLOCK_SIZE) {
+                    self.multiply_block(bi, bj, bk, other, &mut res);
                 }
             }
         }
