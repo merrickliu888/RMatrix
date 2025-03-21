@@ -1,9 +1,19 @@
 use crate::Matrix;
 use crossbeam::scope;
 use itertools::izip;
+use rayon::ThreadPoolBuilder;
+
 use std::cmp::min;
+
 static NUM_THREADS: usize = 10;
 static BLOCK_SIZE: usize = 8;
+
+#[derive(Copy, Clone)]
+struct SyncMutPtr<T>(*mut T);
+
+// Unsafely assert that it's okay to share this pointer across threads.
+unsafe impl<T> Sync for SyncMutPtr<T> {}
+unsafe impl<T> Send for SyncMutPtr<T> {}
 
 /// Representing matrix as a one-dimensional vector
 #[derive(Debug)]
@@ -29,15 +39,19 @@ impl MultithreadMatrix {
         self.data[row * self.num_cols() + col]
     }
 
-    fn multiply_block(&self, bi: usize, bj: usize, bk: usize, other: &Self, res: &mut Vec<f64>) {
+    fn multiply_block(&self, bi: usize, bj: usize, bk: usize, other: &Self, res: SyncMutPtr<f64>) {
         let bi_end = min(bi + BLOCK_SIZE, self.num_rows());
         let bj_end = min(bj + BLOCK_SIZE, other.num_cols());
         let bk_end = min(bk + BLOCK_SIZE, self.num_cols());
 
+        let res_ptr = res.0;
+
         for i in bi..bi_end {
             for j in bj..bj_end {
                 for k in bk..bk_end {
-                    res[i * other.num_cols() + j] += self.get(i, k) * other.get(k, j);
+                    unsafe {
+                        *res_ptr.add(i * other.num_cols() + j) += self.get(i, k) * other.get(k, j);
+                    }
                 }
             }
         }
@@ -137,13 +151,24 @@ impl Matrix for MultithreadMatrix {
 
         let mut res = vec![0.0; self_rows * other_cols];
 
-        for bi in (0..self_rows).step_by(BLOCK_SIZE) {
-            for bj in (0..other_cols).step_by(BLOCK_SIZE) {
-                for bk in (0..self_cols).step_by(BLOCK_SIZE) {
-                    self.multiply_block(bi, bj, bk, other, &mut res);
+        let pool = ThreadPoolBuilder::new()
+            .num_threads(NUM_THREADS)
+            .build()
+            .unwrap();
+
+        let res_ptr: SyncMutPtr<f64> = SyncMutPtr(res.as_mut_ptr());
+        pool.scope(|s| {
+            for bi in (0..self_rows).step_by(BLOCK_SIZE) {
+                for bj in (0..other_cols).step_by(BLOCK_SIZE) {
+                    // Each thread is responsible for a block of the result matrix
+                    s.spawn(move |_| {
+                        for bk in (0..self_cols).step_by(BLOCK_SIZE) {
+                            self.multiply_block(bi, bj, bk, other, res_ptr);
+                        }
+                    });
                 }
             }
-        }
+        });
 
         Self::new_from_vec(res, self_rows, other_cols)
     }
