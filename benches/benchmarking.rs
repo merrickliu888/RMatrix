@@ -1,7 +1,15 @@
 use rmatrix::Matrix;
 use serde::Serialize;
 use std::fs::File;
+use std::io::BufReader;
 use std::time::Instant;
+
+pub fn load_matrices(filename: &str) -> Vec<Vec<Vec<f64>>> {
+    let file = File::open(filename).unwrap();
+    let reader = BufReader::new(file);
+    let matrices: Vec<Vec<Vec<f64>>> = serde_json::from_reader(reader).unwrap();
+    matrices
+}
 
 pub fn benchmark_matrix<M: Matrix>(
     matrix_vectors1: &Vec<Vec<Vec<f64>>>,

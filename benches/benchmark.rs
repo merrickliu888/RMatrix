@@ -1,15 +1,14 @@
 mod benchmarking;
 
-use benchmarking::{benchmark_matrix, save_benchmark_results};
+use benchmarking::{benchmark_matrix, load_matrices, save_benchmark_results};
 use rmatrix::matrices::basic_matrix::BasicMatrix;
+use rmatrix::matrices::blas_matrix::BlasMatrix;
 use rmatrix::matrices::blocked_matrix::BlockedMatrix;
 use rmatrix::matrices::ndarray_matrix::NdarrayMatrix;
 use rmatrix::matrices::one_d_vec_matrix::OneDVecMatrix;
 use rmatrix::matrices::transposed_view_matrix::TransposedViewMatrix;
 
 use std::env;
-use std::fs::File;
-use std::io::BufReader;
 
 fn main() {
     println!("Starting benchmark...");
@@ -18,8 +17,8 @@ fn main() {
     let run_all = args.contains(&String::from("all"));
 
     println!("Loading matrices...");
-    let matrices1 = load_matrices("./benchmarking/matrices1.json");
-    let matrices2 = load_matrices("./benchmarking/matrices2.json");
+    let matrices1 = load_matrices("./benches/matrices1.json");
+    let matrices2 = load_matrices("./benches/matrices2.json");
     println!("Matrices loaded.");
 
     if !args.contains(&String::from("exclude_basic_matrix"))
@@ -83,12 +82,17 @@ fn main() {
         println!("transposed view matrix benchmark completed.");
     }
 
-    println!("Benchmark completed.");
-}
+    if !args.contains(&String::from("exclude_blas_matrix"))
+        && (run_all || args.contains(&String::from("blas_matrix")))
+    {
+        println!("Benchmarking blas matrix...");
+        let blas_matrix_results = benchmark_matrix::<BlasMatrix>(&matrices1, &matrices2);
+        save_benchmark_results(
+            "./benches/benchmark_results/blas_matrix_results.json",
+            &blas_matrix_results,
+        );
+        println!("blas matrix benchmark completed.");
+    }
 
-fn load_matrices(filename: &str) -> Vec<Vec<Vec<f64>>> {
-    let file = File::open(filename).unwrap();
-    let reader = BufReader::new(file);
-    let matrices: Vec<Vec<Vec<f64>>> = serde_json::from_reader(reader).unwrap();
-    matrices
+    println!("Benchmark completed.");
 }
