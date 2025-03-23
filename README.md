@@ -74,7 +74,7 @@ A quick overview of the various matrix implementations. The source code for the 
    - Implements blocking for matrix multiplication and element wise operations. Optimal block size was 8x8.
 
 8. **Multithread Matrix** (`multithread_matrix.rs`)
-   - Parallel implementation. Used 10 threads.
+   - Parallel implementation. Used 16 threads.
    - For element-wise operations, each thread takes an independent partition of a matrix.
    - For matrix multipliction, each thread takes a block
 

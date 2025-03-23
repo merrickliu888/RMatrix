@@ -5,7 +5,7 @@ use rayon::ThreadPoolBuilder;
 
 use std::cmp::min;
 
-static NUM_THREADS: usize = 10;
+static NUM_THREADS: usize = 16;
 static BLOCK_SIZE: usize = 8;
 
 #[derive(Copy, Clone)]
@@ -112,7 +112,7 @@ impl Matrix for MultithreadMatrix {
         scope(|s| {
             for (data_chunk, self_chunk, other_chunk) in izip!(chunks, self_chunks, other_chunks) {
                 s.spawn(|_| {
-                    for i in 0..chunk_size {
+                    for i in 0..data_chunk.len() {
                         data_chunk[i] = self_chunk[i] + other_chunk[i];
                     }
                 });
@@ -133,7 +133,7 @@ impl Matrix for MultithreadMatrix {
         scope(|s| {
             for (data_chunk, self_chunk, other_chunk) in izip!(chunks, self_chunks, other_chunks) {
                 s.spawn(|_| {
-                    for i in 0..chunk_size {
+                    for i in 0..data_chunk.len() {
                         data_chunk[i] = self_chunk[i] - other_chunk[i];
                     }
                 });
@@ -182,7 +182,7 @@ impl Matrix for MultithreadMatrix {
         scope(|s| {
             for (data_chunk, self_chunk) in izip!(chunks, self_chunks) {
                 s.spawn(|_| {
-                    for i in 0..chunk_size {
+                    for i in 0..data_chunk.len() {
                         data_chunk[i] = self_chunk[i] * scalar;
                     }
                 });
