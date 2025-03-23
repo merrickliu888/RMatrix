@@ -18,7 +18,7 @@ Some additional things to do next include taking a look at BLIS, improve data pa
 
 ## Overview
 
-### Experimenation Setup
+### Experimentation Setup
 
 The machine I was running this on is a Macbook Pro (M4). Note, you will not be able to run this on non Apple machines as the code uses Accelerate (contains Apple's BLAS implementation).
 
