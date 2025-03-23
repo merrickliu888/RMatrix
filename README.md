@@ -2,6 +2,8 @@
 
 In this repo, I experimented and benchmarked various implementations of matrix operations in Rust. The operations are matrix multiplication, addition, subtraction, and scalar multiplication.
 
+My goal was to gain some intuition around optimizations, what goes on under the hood, and get an introduction to low-level stuff. There's a lot of room for improvement, but I definitely learned a lot about low-level computing :)
+
 ### README Contents:
 
 - [Overview](#overview)
@@ -50,11 +52,11 @@ A quick overview of the various matrix implementations. The source code for the 
 3. **NDArray Matrix** (`ndarray_matrix.rs`)
 
    - Wrapper around the [`ndarray`](https://docs.rs/ndarray/latest/ndarray/) crate
-   - Leverages optimized BLAS operations
+   - Leverages [`matrixmultiply`](https://github.com/bluss/matrixmultiply) create under the hood, which does not use BLAS, but instead implements GEMM in Rust. See this [blog](https://bluss.github.io/rust/2016/03/28/a-gemmed-rabbit-hole/) post by the creator for more info.
 
 4. **NumPy Matrix** (`numpy_benchmark.ipynb`)
 
-   - Matrices as NumPy ndarrays.
+   - Matrices as NumPy ndarrays. Uses BLAS.
 
 5. **Transposed View Matrix** (`transposed_view_matrix.rs`)
 
@@ -81,6 +83,13 @@ A quick overview of the various matrix implementations. The source code for the 
 ![Matrix Multiplication Performance](images/multiplication_all.png)
 
 ### Element-wise Operations
+
+All the element-wise operations perform similiarly as expected. Scalar multiplciation seems to be faster which is because its a "simpler computation" ie. fewer memory accesses, better use of registers, etc. See the charts below.
+
+**Interesting Findings**
+
+- Multi-threading performs worse than just using a 1D vec. This is due to the overhead associated with threading, along with maintaining cache coherence. The matrices also may be to small to really reap the benefits of multi-threading.
+- Blocking is slower than 1D vec. This is because blocking is not beneficial for element-wise operations (as data isn't reused) so it's really just adding extra overhead.
 
 **Matrix Addition**
 
