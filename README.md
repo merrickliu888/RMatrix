@@ -51,32 +51,32 @@ A quick overview of the various matrix implementations. The source code for the 
    - More memory efficient than 2D vectors
    - Better cache locality.
 
-3. **NDArray Matrix** (`ndarray_matrix.rs`)
-
-   - Wrapper around the [`ndarray`](https://docs.rs/ndarray/latest/ndarray/) crate
-   - Leverages [`matrixmultiply`](https://github.com/bluss/matrixmultiply) create under the hood, which does not use BLAS, but instead implements GEMM in a [`BLIS`](https://github.com/flame/blis) inspred way in Rust. See this [blog](https://bluss.github.io/rust/2016/03/28/a-gemmed-rabbit-hole/) post by the creator for more info.
-
-4. **NumPy Matrix** (`numpy_benchmark.ipynb`)
-
-   - Matrices as NumPy ndarrays. Uses BLAS.
-
-5. **Transposed View Matrix** (`transposed_view_matrix.rs`)
+3. **Transposed View Matrix** (`transposed_view_matrix.rs`)
 
    - Matrices that contain a transposed / column-major order copy of its data.
    - Useful for optimizing matrix multiplication as better caching for RHS matrix.
 
-6. **BLAS Matrix** (`blas_matrix.rs`)
-
-   - Direct integration with BLAS (Basic Linear Algebra Subprograms) through Apple Accelerate
-
-7. **Blocked Matrix** (`blocked_matrix.rs`)
+4. **Blocked Matrix** (`blocked_matrix.rs`)
 
    - Implements blocking for matrix multiplication and element wise operations. Optimal block size was 8x8.
 
-8. **Multithread Matrix** (`multithread_matrix.rs`)
+5. **Multithread Matrix** (`multithread_matrix.rs`)
    - Parallel implementation. Used 16 threads.
    - For element-wise operations, each thread takes an independent partition of a matrix.
    - For matrix multipliction, each thread takes a block
+
+6. **NDArray Matrix** (`ndarray_matrix.rs`)
+
+   - Wrapper around the [`ndarray`](https://docs.rs/ndarray/latest/ndarray/) crate
+   - Leverages [`matrixmultiply`](https://github.com/bluss/matrixmultiply) create under the hood, which does not use BLAS, but instead implements GEMM in a [`BLIS`](https://github.com/flame/blis) inspred way in Rust. See this [blog](https://bluss.github.io/rust/2016/03/28/a-gemmed-rabbit-hole/) post by the creator for more info.
+
+7. **NumPy Matrix** (`numpy_benchmark.ipynb`)
+
+   - Matrices as NumPy ndarrays. Uses BLAS.
+
+8. **BLAS Matrix** (`blas_matrix.rs`)
+
+   - Direct integration with BLAS (Basic Linear Algebra Subprograms) through Apple Accelerate
 
 ## Analysis
 
