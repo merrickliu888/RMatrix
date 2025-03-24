@@ -63,7 +63,7 @@ A quick overview of the various matrix implementations. The source code for the 
 5. **Multithread Matrix** (`multithread_matrix.rs`)
    - Parallel implementation. Used 16 threads.
    - For element-wise operations, each thread takes an independent partition of a matrix.
-   - For matrix multipliction, each thread takes a block
+   - For matrix multipliction, each thread takes a block (8x8)
 
 6. **NDArray Matrix** (`ndarray_matrix.rs`)
 
