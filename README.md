@@ -86,7 +86,7 @@ A quick overview of the various matrix implementations. The source code for the 
 
 - Implementations perform roughly how I would expect.
 - Representing a matrix as a 2D vector being the slowest makes sense as there is poor spatial locality resulting in a lot of potential cache misses, TLB misses, page faults, etc.
-- Since we store data in row-major order, the 1D vector representation will result in a lot of cache misses, especially in retrieving columns for the RHS matrix.
+- Since we store data in row-major order, the 1D vector representation will result in a lot of cache misses in retrieving columns for the RHS matrix.
 - To improve this, the "Transposed" matrix stores a copy of the original matrix, but transposed (column-major order), which does improve performance somewhat.
 - To further improve this, blocking / tiling can be used, which we can then combine with multi-threading to squeeze some more performance.
 - Ndarray performs faster as it utilzies some highly optimzied micro-kernels. Then finally, NumPy and BLAS implementations perform the fastest and are essentially the same, as they both use BLAS under the hood.
